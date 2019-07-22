@@ -2,6 +2,23 @@ const API = "http://localhost:8090";
 
 window.Shop = {
 
+    addProductToCart: function(productId) {
+      let body = {
+          customerId: 1,
+          productId: productId,
+      }
+
+        $.ajax({
+          url: API + "/cart/update",
+          method: "PUT",
+          contentType:"application/json",
+          data: JSON.stringify(body)
+
+      }).done(function () {
+            console.log('succes');
+        });
+    },
+
     getProducts: function () {
         $.ajax({
             url: API + "/products/getProducts",
@@ -37,7 +54,17 @@ window.Shop = {
 
         //css selector
         $('#products-container').html(productsHtml)
+    },
+
+    bindEvents: function () {
+      $('#products-container').delegate('add_to_cart_button','click',function () {
+          event.preventDefault();
+
+          let productId = $(this).data()
+          Shop.addProductToCart()
+      })
     }
 };
 
 Shop.getProducts();
+Shop.bindEvents();
